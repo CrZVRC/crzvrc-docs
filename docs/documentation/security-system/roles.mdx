@@ -1,5 +1,5 @@
 ---
-sidebar_position: 0
+sidebar_position: 1
 ---
 
 # Roles
@@ -22,15 +22,21 @@ Each entry in the Roles list on `SS_RolesManagement` has the following fields:
 | **Persistent** | `bool` | If a player holds this role temporarily and leaves, they get it back automatically if they rejoin the *same* instance. Never applies to permanent holds (whitelist, instance owner) — those are re-granted on join anyway. |
 | **Two Factor** | `bool` | Requires **both** a whitelist entry **and** the correct keypad password before the role is actually granted — neither alone is enough. |
 | **Keypad Permanent** | `bool` | If enabled, granting this role from the keypad makes it permanent (unrevocable from the panel or keypad) instead of the usual temporary grant. |
+| **Layer** | `int` | Roles sharing the same non-negative layer number can't be held at the same time — granting one automatically swaps out whichever role in that layer the player currently holds. `-1` (the default) means no layer. See [Role Layers](#role-layers) below. |
 | **Is Security** | `bool` | Whether holding this role counts as "security" — required to grant or revoke *any* role for *any* player from the management panel. |
 | **Login Sound** | `AudioClip` | Played through the shared login audio source when a player holding this role (as their most senior held role) joins. |
 | **Color** | `Color` | Used in the role list UI, in notifications, and on the keypad's result text. |
 | **Spawn Point** | `Transform` | Where a player holding this role is teleported to on join. |
 | **Use URL Whitelist** | `bool` | Whether entries for this role, fetched from the whitelist URL, are accepted. Doesn't affect manually-typed whitelist entries. |
 | **For Instance Owner** | `bool` | Automatically and permanently granted to whoever created the current world instance. |
+| **Player Tag** | Tag popup | The [Player Tags](../player-tags/config.mdx) tag shown automatically above a player's head while they hold this role, or none. See [Player Tags](./player-tags.mdx). |
 
 :::warning
 Whitelist entries (manual and URL-fetched) reference roles **by name**, not by index. If you rename a role, any existing whitelist entries referencing the old name silently stop matching — the Inspector flags an orphaned entry with `(missing)`, but nothing fixes it automatically. Reordering or removing roles is handled safely and doesn't need any manual fixup.
+:::
+
+:::tip[Refreshing the management panel]
+The [player management panel](./ui-theme#adding--removing-roles) is fully modular and adds or removes a role column automatically to match this list — but only once its own Inspector redraws. **Every time you add or remove a role here, click on the `_securitySystemUI` GameObject** (the one holding `SS_SecuritySystemUI`) in your Hierarchy to make the panel rebuild and pick up the change.
 :::
 
 ---
@@ -43,6 +49,18 @@ A role's **Child Role** points at, at most, one other role, forming a chain rath
 * **Revoking a role cascades up**: a role can never be held without what it requires, so revoking "Access" also revokes "Security" (and anything else that in turn required "Security"). Revoking "Security" does **not** revoke "Access" — "Access" can exist on its own.
 * **All-or-nothing on permanence.** If satisfying the cascade would require revoking a *permanent* role (whitelisted, instance owner, or permanent-via-keypad), the entire removal is refused instead — nothing changes, not even the role you originally asked to revoke.
 * **Nothing stops granting a child role directly.** A role's Child Role setting only governs what happens on grant/revoke cascades, not who's eligible to hold it — any role can be toggled on for a player from the panel without them holding its parent.
+
+---
+
+## Role Layers
+
+A **separate, independent mechanism** from the Role Hierarchy above, for making a group of roles mutually exclusive — the classic case being a set of interchangeable "job" roles where a player should only ever hold one at a time.
+
+* **Give every role in the group the same non-negative Layer number.** Any roles sharing a layer can't be held at the same time. This works for a group of any size — three or more mutually exclusive roles are just as fast to set up as two, since there's no explicit pairing to configure.
+* **Granting auto-swaps, like a radio button.** Granting a role that shares a layer with one the player already holds automatically revokes the currently-held one first, then grants the new one — you don't need to manually remove the old role before granting the new one.
+* **Exception: permanent roles can't be bumped out this way.** If the role currently occupying the layer is permanent (whitelisted, instance owner, or permanent-via-keypad), the swap is refused instead — the grant that would have triggered it doesn't happen either.
+* **Works from both the management panel and the [Security Keypad](./keypad.mdx).** Typing the password for a role in an already-occupied layer swaps it in exactly the same way as toggling it on from the panel.
+* Two roles sharing a Layer don't need to share a Child Role, and vice versa — a shared Child Role alone never makes roles mutually exclusive. For example, "DJ" and "Bartender" could both require "Access" as their child (so either one also grants "Access") while sharing Layer `0` so only one of the two can ever be held at once.
 
 ---
 

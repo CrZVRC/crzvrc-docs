@@ -1,8 +1,8 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
-# Actions & Notifications
+# Actions
 
 Roles can be wired to automatically do things in the world the moment they're granted or revoked from a player — teleporting them, playing an animation, or showing/hiding objects. This binding happens on `SS_RolesManagement`, in its **Role Actions** list, separate from the Roles list itself: any number of actions can be attached to a single role's grant or revoke, with no per-role limit.
 
@@ -39,17 +39,3 @@ Teleport and Toggle Objects actions only affect the player whose role actually c
 ## For Developers
 
 Every action script also exposes a typed `ExecuteLocal(VRCPlayerApi forPlayer)` overload, in addition to the parameterless one the role system calls internally. This lets another script — for example a compatible **Admin Tablet** — trigger the exact same teleport, toggle, or animation directly, without going through a role grant/revoke at all. If you're building your own integration, call this overload with a typed reference to the action rather than trying to fire a role event.
-
----
-
-## Notifications (Optional)
-
-If the **Notification System** asset is also present in your world, the Security System can show a small on-screen alert to a player when they personally receive or lose a role, using that role's name and color.
-
-The Security System prefab already includes a `_notifications` GameObject with the `SS_Notifications` script attached and linked into `SS_SecuritySystem`, so enabling this is a one-step hookup:
-
-1. Drag your world's `NS_NotificationSystem` object into the **Notification System** field on `_notifications` (`SS_Notifications`).
-2. Enable **Notifications Enabled** on `SS_SecuritySystem`.
-3. *(Optional)* Customize the **Role Granted** and **Role Revoked** message text, text color, and icon on `SS_Notifications` — the role's own name and color are always used as the notification's subtext and accent.
-
-This integration is entirely optional — the Security System works fine, with no errors, if the Notification System isn't installed and this field is left empty.

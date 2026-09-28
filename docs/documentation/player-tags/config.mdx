@@ -1,0 +1,50 @@
+---
+sidebar_position: 1
+---
+
+# Configuration
+
+All of Player Tags' settings live on a single script, `PL_PlayerTags`. Select the GameObject holding it in your scene hierarchy to find everything described on this page.
+
+Player Tags runs entirely locally on each client — there's no networking involved, so nothing here needs to sync between players.
+
+---
+
+## Tags
+
+The **Tags** list defines every tag your world can show. There's no fixed limit on how many you can add.
+
+Each row has two fields:
+
+*   **Name**: The tag's display name. This is what you'll pick from when assigning a tag to a player, and what you'll type on the [remote whitelist](./tag-assignment.mdx) if you use one.
+*   **Template**: The GameObject instantiated above a player's head when they have this tag. Build it like any other in-world UI — a Canvas, text, images, whatever you want the tag to look like.
+
+:::warning
+A tag's Template must be a **plain GameObject with no scripts on it** (no `UdonBehaviour` of any kind). Player Tags instantiates it directly at runtime, and only ever touches its `Transform` and calls `SetActive` on it — a scripted template is not supported.
+:::
+
+A player only ever shows **one tag at a time**. If they'd qualify for a different tag while already showing one, the old tag is swapped out for the new one automatically — you don't need to remove the old one yourself.
+
+---
+
+## Positioning
+
+*   **`Y Offset`** (Default: `0.3`): How far above the player's head the tag floats, in meters.
+*   **`Rotation Mode`**: How the tag rotates. Choose one of:
+    *   **`None`**: The tag doesn't rotate at all — it keeps whatever orientation its Template was built with, and only follows the player's head position.
+    *   **`With Player`**: The tag turns together with the player wearing it, as if rigidly attached. It always stays upright — it won't tip forward or backward if they look up or down.
+    *   **`To Local Player`**: The tag always turns to face whoever is looking at it, like a sign that follows your eyes. It only ever turns left or right to do this — it never tilts up or down, no matter how tall the viewer is or the angle they're looking from. Since this is worked out individually by everyone who can see it, two different players looking at the same tag from different directions each see it facing *them*.
+
+The tag follows the player's head in real time — recalculated every frame, so it tracks through movement, jumping, and crouching.
+
+---
+
+## Performance
+
+*   **`Max Visible Distance`** (Default: `25`): Tags farther than this from you (in meters) stop updating and are hidden, reappearing the instant you're close enough again. This keeps a world with many tagged players running smoothly, with no setup beyond this one number. Set to **`0`** to disable this and always show every tag regardless of distance.
+
+---
+
+## Visibility
+
+*   **`Show Own Tag`** (Default: on): Whether a player can see the tag floating above their *own* head. Turn this off if you'd rather a tag only be visible to *other* players — useful for something like an "It" tag in a tag-style minigame, where everyone else should see it but the wearer shouldn't get a constant visual reminder. There's no performance cost to turning this off: a hidden tag is simply never created for that player, rather than being created and then hidden.

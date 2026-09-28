@@ -1,0 +1,100 @@
+---
+sidebar_position: 3
+---
+
+# API Reference
+
+`PL_PlayerTags` exposes a small public API so other Udon scripts — a minigame, a custom door, an achievement system — can grant or take away a player's tag without needing any special permission.
+
+:::info
+None of these methods check ownership or require any permission. Any script, on any client, can call them for any player. Since tag ownership isn't networked at all (see [Configuration](./config.mdx)), a call only ever affects what *that calling client's own player* sees — it's meant for local, client-side effects, not a synced announcement to everyone.
+:::
+
+---
+
+## Methods
+
+### `AddTag`
+
+Shows a tag for a player, replacing whatever tag they currently show (see "One tag at a time" in [Configuration](./config.mdx)). No-op if the tag name doesn't match a configured tag, or if the player already shows that same tag.
+
+`public void AddTag(VRCPlayerApi player, string tagName)`
+
+**Parameters:**
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `player` | `VRCPlayerApi` | The player to show the tag for. |
+| `tagName` | `string` | Name of the tag to show. |
+
+---
+
+### `RemoveTag`
+
+Removes a player's tag, but only if it currently matches the given tag name. No-op if the player's current tag (if any) doesn't match — this way, removing an unrelated tag by name can never clear something else that happens to be showing.
+
+`public void RemoveTag(VRCPlayerApi player, string tagName)`
+
+**Parameters:**
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `player` | `VRCPlayerApi` | The player to remove the tag from. |
+| `tagName` | `string` | Name of the tag that must currently be showing for it to be removed. |
+
+---
+
+### `GetTagCount`
+
+Returns the total number of configured tags.
+
+`public int GetTagCount()`
+
+**Returns:** The number of tags in the [Tags list](./config.mdx).
+
+---
+
+### `GetTagName`
+
+Returns the display name of a tag.
+
+`public string GetTagName(int index)`
+
+**Parameters:**
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `index` | `int` | Tag index to look up. |
+
+**Returns:** The tag's name, or `""` if `index` is out of range.
+
+---
+
+### `GetTagIndex`
+
+Finds the index of a tag by its name.
+
+`public int GetTagIndex(string tagName)`
+
+**Parameters:**
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `tagName` | `string` | Tag name to look up. |
+
+**Returns:** The tag's index, or `-1` if no tag has that name.
+
+---
+
+## Generic-caller bridge
+
+If your script only holds `PL_PlayerTags` through a generic `UdonSharpBehaviour` reference (rather than a typed one), you can't call `AddTag`/`RemoveTag` directly with arguments. Use this event pair instead:
+
+| Field / Method | Type | Description |
+| :--- | :--- | :--- |
+| `eventPlayerId` | `int` (public) | Set this to the target player's id via `SetProgramVariable` before firing an event. |
+| `eventTagName` | `string` (public) | Set this to the tag name via `SetProgramVariable` before firing an event. |
+| `AddTagEvent()` | — | Fire with `SendCustomEvent("AddTagEvent")` to call `AddTag` using the two fields above. |
+| `RemoveTagEvent()` | — | Fire with `SendCustomEvent("RemoveTagEvent")` to call `RemoveTag` using the two fields above. |
+
+These names are a stable integration contract — safe to build against even from another asset that only ever references `PL_PlayerTags` generically.

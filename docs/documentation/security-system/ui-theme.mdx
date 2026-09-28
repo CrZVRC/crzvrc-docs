@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 7
 ---
 
 # Player Management Panel & Theme
@@ -14,6 +14,16 @@ The management panel is the main interface security staff use to view and contro
 * A **search box** that filters the player list by name — leave it empty to show everyone.
 * Updates automatically as players join, leave, or have their roles changed by anyone, without needing to reopen or refresh anything.
 * Toggling a role for a player who doesn't currently have permission to grant/revoke (see [Security Permission](./roles#security-permission)) simply snaps back to its previous state.
+
+---
+
+## Adding & Removing Roles
+
+The panel is **fully modular** — it doesn't need to be rebuilt by hand when your Roles list changes. Add a role on `SS_RolesManagement` and the panel automatically grows to match: a new role column appears, and every player card gets a new toggle for it. Remove a role and the panel shrinks back down the same way.
+
+:::tip[Refreshing the panel]
+This rebuild only happens while the Inspector for the GameObject holding `SS_SecuritySystemUI` (`_securitySystemUI` in the prefab) is open and redrawing — it's edit-time tooling, not something that runs on its own in the background. **After adding or removing a role, click on that GameObject in your Hierarchy once** to make its Inspector redraw and the panel rebuild to match. If you don't, the panel keeps showing its old set of role columns until the next time that Inspector happens to redraw.
+:::
 
 ---
 
@@ -32,7 +42,7 @@ The management panel is the main interface security staff use to view and contro
 Each color also has a list of which UI elements it applies to, wired directly on `SS_ConfigUI` for its own elements, and separately on each `SS_PlayerCard` / `SS_RoleCard` prefab for their own per-instance elements (since a card is instantiated many times, it can't share a single element list with the others).
 
 :::tip[Live Preview]
-Changing a color on `SS_ConfigUI` updates every already-built player card and role card immediately in the Unity Editor — no need to enter Play mode to see it. If a color ever doesn't seem to apply, the **Apply Colors** button on `SS_ConfigUI`'s Inspector re-applies everything on demand.
+Changing a color on `SS_ConfigUI` updates every already-built player card and role card immediately in the Unity Editor — no need to enter Play mode to see it. This usually happens automatically as you edit, but not every way of changing a color (notably dragging in the color picker window) reliably triggers it. `SS_ConfigUI`'s Inspector has an **Apply Colors** button below the color fields for exactly this case — click it and every color is force-applied across the whole panel, including any player and role cards already built, so it's the reliable way to guarantee your colors actually show up.
 :::
 
 ---

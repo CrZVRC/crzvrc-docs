@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # The Security Keypad
@@ -14,11 +14,27 @@ The `SecurityKeypad` prefab is a physical, interactable in-world keypad. A playe
 * Entry is a **4-digit password** (`SS_Config.KEYPAD_PASSWORD_LENGTH`), checked automatically the moment the 4th digit is entered.
 * If the password matches a role the player doesn't have, it's **granted**.
 * If the player already holds that role **temporarily**, entering its password again **removes it instead** — the keypad doubles as a logout. A role held **permanently** (whitelisted, instance owner, or granted permanently via **Keypad Permanent**) can't be removed this way, and re-entering its password is indistinguishable from a wrong password.
-* The result is shown on the keypad's small display: the role's name and whether it was **"Granted"** or **"Removed"**, in that role's color, or **"Access Denied"** in red — then clears automatically after a few seconds.
+* If the entered password belongs to a role sharing a [Layer](./roles#role-layers) with a role the player already holds, granting it automatically swaps out the old role first — same auto-swap behavior as the panel.
+* The result briefly flashes on the keypad's small display — the role's name plus **"Granted"** or **"Removed"**, in that role's color, or **"Access Denied"** in red — and then settles back into the player's persistent **"Logged in as"** status. See [Logged In As Status](#logged-in-as-status) below.
 * A sound plays on every key press, and a separate sound plays when a password is rejected or the keypad is rate-limited.
 
 :::info
 Keypad passwords are assumed **unique per role**. If two roles are accidentally given the same password, only whichever comes first in the Roles list is ever reachable from the keypad.
+:::
+
+---
+
+## Logged In As Status
+
+Beyond the brief flash of a grant, removal, or denial, the keypad's display also permanently shows **"Logged in as &lt;Role&gt;"** for whichever role the player currently holds — it doesn't clear after a few seconds the way a result flash does, it stays up until there's a reason to change it.
+
+* **Typing a correct password** briefly flashes **"&lt;Role&gt; Granted"** (or **"Removed"** on logout), then settles into **"Logged in as &lt;Role&gt;"**.
+* **Typing a wrong password** briefly flashes **"Access Denied"**, then reverts back to whatever role the player is actually logged in as — it never loses track of their status over a bad guess.
+* **If the player holds more than one role, the display always shows the most senior one** — based on the [Role Hierarchy](./roles#role-hierarchy-parentchild) — not necessarily whichever one was just typed in. For example, a player already logged in as "Security" who types the password for "DJ" (a role beneath Security) briefly sees "DJ Granted," then the display reverts to "Logged in as Security," since that's still their most senior role.
+* Logging out of the current role updates the display to whichever role is now the player's most senior one, or clears back to blank if they hold nothing else.
+
+:::tip[Cross-Keypad Syncing]
+A keypad always correctly shows the result of a password typed into **itself**, with zero configuration. To also have it reflect roles granted **elsewhere** — a whitelist, the management panel, or a different keypad — add it to the **Security Keypads** list on the main Security System object in the Inspector. This is a one-time setup step per keypad, needed only for this cross-keypad syncing; a keypad left off the list still works perfectly for its own passwords, it just won't live-update if the player's role changes somewhere else.
 :::
 
 ---
@@ -55,7 +71,13 @@ Each keypad has a configurable limit on how many wrong passwords it accepts with
 | **Blocked Text** | Text shown when rate-limited (default `"Too Many Attempts"`). |
 | **Denied Color** | Color used for denied/blocked messages (default red). |
 | **Default Color** | Color used for entered digits (default white). |
-| **Result Display Seconds** | How long a result message stays on screen before clearing (default `3`). |
+| **Result Display Seconds** | How long a temporary result message (a grant, removal, denial, or block) stays on screen before reverting to the persistent **"Logged in as"** status (default `3`). |
+
+### `SS_SecuritySystem`
+
+| Field | Description |
+| :--- | :--- |
+| **Security Keypads** | The list of keypads that should live-update their **"Logged in as"** status when a role changes anywhere else — see [Cross-Keypad Syncing](#logged-in-as-status) above. |
 
 ---
 

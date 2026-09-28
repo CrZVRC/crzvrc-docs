@@ -1,6 +1,6 @@
 {
   "label": "通知システム",
-  "position": 6,
+  "position": 11,
   "link": {
     "type": "generated-index",
     "description": "Notification System は、ゲーム内のプレイヤー向けアラートを管理およびキューイングするために設計されています。中央集約型のコンポーネントとして機能し、他の Udon スクリプトが通知をトリガーするためのインターフェースを提供します。"

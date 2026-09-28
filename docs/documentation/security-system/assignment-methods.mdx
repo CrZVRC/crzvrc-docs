@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 # Assignment Methods
@@ -45,6 +45,8 @@ A physical in-world keypad where a player types a numeric password. If it matche
 
 * Granted this way, a role is **temporary by default**, same as a manual panel grant — unless the role has **Keypad Permanent** enabled, in which case it's granted **permanently** instead.
 * **Also works as a logout.** Typing the password of a temporary role you already hold removes it instead of granting it again. A permanently-held role (whitelisted, instance owner, or permanent-via-keypad) can't be removed this way.
+* **Also respects [Role Layers](./roles#role-layers).** Typing the password of a role sharing a layer with one you already hold swaps it in automatically, same as granting it from the panel.
+* The keypad's display always shows who you're currently logged in as — see [Logged In As Status](./keypad#logged-in-as-status).
 
 ---
 

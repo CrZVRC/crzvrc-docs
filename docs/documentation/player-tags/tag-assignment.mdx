@@ -1,0 +1,56 @@
+---
+sidebar_position: 2
+---
+
+# Tag Assignment
+
+There are two ways to give a player a tag, and you can use either one alone or both together — they combine into a single list.
+
+---
+
+## Manual Assignment (Users list)
+
+The **Users** list on the `PL_PlayerTags` script lets you assign tags directly in the Editor — no in-world panel needed for this asset.
+
+Each row has two fields:
+
+*   A **tag popup**, listing every tag from your [Tags list](./config.mdx).
+*   A **player name** field: the player's exact VRChat display name.
+
+Since this list is Editor-only, changing it requires re-uploading your world — there's no live management panel for Player Tags.
+
+---
+
+## Remote Whitelist (optional)
+
+Instead of, or alongside, the manual list, you can assign tags from an external text file (such as a Pastebin), fetched automatically when the world loads.
+
+*   **`User List Url`**: The **raw** URL of your list. Create a paste on Pastebin, click the **Raw** button, and copy the URL from your browser's address bar (it should look like `https://pastebin.com/raw/...`).
+
+Format one entry per line:
+
+```
+PlayerName, TagName
+```
+
+For example:
+
+```
+CrZ, Admin
+FriendOne, DJ
+FriendTwo, Bartender
+```
+
+*   The tag name after the comma must match one of the names in your [Tags list](./config.mdx) exactly. An unrecognized tag name is simply skipped, without causing any errors for your players.
+*   Fetched entries are added to the **end** of the same combined list the manual Users list uses.
+
+---
+
+## How the combined list resolves
+
+Both sources feed into one list, checked in order — **manual entries first, then remote entries** — and the **first match wins**. If the same player name appears in both the manual list and the remote whitelist, the manual entry takes priority.
+
+A few things worth knowing:
+
+*   **Matching is by exact VRChat display name.** A player who changes their display name will stop matching an existing entry under their old name.
+*   Both sources are resolved the same way, whether a player already has an entry when they join, or the remote list finishes loading after they've already joined — either path can grant a tag.

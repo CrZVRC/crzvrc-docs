@@ -1,0 +1,8 @@
+{
+  "label": "Player Tags",
+  "position": 8,
+  "link": {
+    "type": "generated-index",
+    "description": "Player Tags shows a floating tag — like \"Admin\", \"DJ\", or \"Bartender\" — above a player's head so they can be identified at a glance. Define named tags with your own visual template, then assign them to players by name, either typed directly in the Editor or fetched from a remote URL — no scripting required."
+  }
+}

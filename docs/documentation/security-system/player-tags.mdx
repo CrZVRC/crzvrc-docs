@@ -1,0 +1,24 @@
+---
+sidebar_position: 6
+---
+
+# Player Tags
+
+:::info[Optional]
+This page describes an optional integration. If the **Player Tags** field described below is left empty, or you haven't installed the Player Tags asset at all, every role's **Player Tag** dropdown simply shows **"No Player Tags"** and nothing else needs configuring — the Security System works exactly the same either way, with no errors.
+:::
+
+If the separate **[Player Tags](../player-tags/config.mdx)** asset is also present in your world, each role can automatically show or hide a floating tag above a player's head the moment the role is granted or revoked — see that asset's own docs for what a tag is and how to build one.
+
+---
+
+## Setting It Up
+
+1. On `SS_RolesManagement`, drag your world's `PL_PlayerTags` object into the **Player Tags** field, under its own "Player Tags" header at the bottom of the Inspector.
+2. On each role you want to show a tag, pick one from that role's **Player Tag** dropdown (see [Defining a Role](./roles#defining-a-role)) — it lists every tag currently defined on your Player Tags setup.
+
+---
+
+## One Tag At A Time
+
+A player only ever shows one tag at a time (see Player Tags' own docs). If someone holds two roles that each have a *different* Player Tag configured, the tag shown is always the one from the more senior role in the [Role Hierarchy](./roles#role-hierarchy-parentchild) — whichever role requires the other — regardless of which order the roles were actually granted in. If neither role requires the other, the lower one in your Roles list wins.

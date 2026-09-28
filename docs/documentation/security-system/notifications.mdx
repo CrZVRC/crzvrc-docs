@@ -1,0 +1,17 @@
+---
+sidebar_position: 5
+---
+
+# Notifications
+
+:::info[Optional]
+This page describes an optional integration. The Security System works fine, with no errors, if the Notification System isn't installed and left unconfigured.
+:::
+
+If the **Notification System** asset is also present in your world, the Security System can show a small on-screen alert to a player when they personally receive or lose a role, using that role's name and color.
+
+The Security System prefab already includes a `_notifications` GameObject with the `SS_Notifications` script attached and linked into `SS_SecuritySystem`, so enabling this is a one-step hookup:
+
+1. Drag your world's `NS_NotificationSystem` object into the **Notification System** field on `_notifications` (`SS_Notifications`).
+2. Enable **Notifications Enabled** on `SS_SecuritySystem`.
+3. *(Optional)* Customize the **Role Granted** and **Role Revoked** message text, text color, and icon on `SS_Notifications` — the role's own name and color are always used as the notification's subtext and accent.
