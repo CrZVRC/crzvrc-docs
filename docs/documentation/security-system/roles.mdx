@@ -29,7 +29,7 @@ Each entry in the Roles list on `SS_RolesManagement` has the following fields:
 | **Spawn Point** | `Transform` | Where a player holding this role is teleported to on join. |
 | **Use URL Whitelist** | `bool` | Whether entries for this role, fetched from the whitelist URL, are accepted. Doesn't affect manually-typed whitelist entries. |
 | **For Instance Owner** | `bool` | Automatically and permanently granted to whoever created the current world instance. |
-| **Player Tag** | Tag popup | The [Player Tags](../player-tags/config.mdx) tag shown automatically above a player's head while they hold this role, or none. See [Player Tags](./player-tags.mdx). |
+| **Player Tag** | Tag popup | The [Player Tags](/docs/documentation/player-tags/config) tag shown automatically above a player's head while they hold this role, or none. See [Player Tags](./player-tags.mdx). |
 
 :::warning
 Whitelist entries (manual and URL-fetched) reference roles **by name**, not by index. If you rename a role, any existing whitelist entries referencing the old name silently stop matching — the Inspector flags an orphaned entry with `(missing)`, but nothing fixes it automatically. Reordering or removing roles is handled safely and doesn't need any manual fixup.
