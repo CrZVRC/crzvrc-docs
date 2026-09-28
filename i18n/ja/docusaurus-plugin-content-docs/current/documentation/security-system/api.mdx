@@ -1,0 +1,155 @@
+---
+sidebar_position: 8
+---
+
+# API リファレンス
+
+Security System は、他の Udon スクリプトがやり取りするための一連のパブリックメソッドを `SS_SecuritySystem` 上に公開しています。カスタムのドアやサインのためにプレイヤーのロールをチェックする場合でも、独自の UI からロールを付与・剥奪する場合でも利用できます。
+
+すべてのメソッドは明示的な `VRCPlayerApi player` 引数を取ります — 自分自身に対するチェックには `Networking.LocalPlayer` を渡してください。
+
+---
+
+## 読み取りメソッド
+
+これらはすでに同期済みの状態を読み取るだけのメソッドです — どのクライアントから呼び出しても安全で、特定のロールの保持やオーナーシップも必要としません。
+
+### `HasRole`
+
+プレイヤーが現在あるロールを保持しているかどうかをチェックします。2 つのオーバーロードがあります。
+
+`public bool HasRole(VRCPlayerApi player, int roleIndex)`
+`public bool HasRole(VRCPlayerApi player, string role)`
+
+| パラメータ | 型 | 説明 |
+| :--- | :--- | :--- |
+| `player` | `VRCPlayerApi` | チェック対象のプレイヤーです。 |
+| `roleIndex` / `role` | `int` / `string` | インデックスまたは名前で指定する、チェック対象のロールです。 |
+
+範囲外のインデックスや存在しないロール名の場合は、例外を投げるのではなく `false` を返します。
+
+---
+
+### `GetRoles`
+
+プレイヤーが現在保持しているすべてのロールを取得します。
+
+`public string[] GetRoles(VRCPlayerApi player)`
+
+**パラメータ:**
+
+| パラメータ | 型 | 説明 |
+| :--- | :--- | :--- |
+| `player` | `VRCPlayerApi` | チェック対象のプレイヤーです。 |
+
+ロールインデックス順のロール名の配列を返します。プレイヤーが何も保持していない場合や追跡対象でない場合でも、`null` ではなく空の配列を返します。
+
+---
+
+### `GetHighestRole`
+
+ロール階層に基づいて、プレイヤーが保持している中で最も上位の単一のロールを取得します。
+
+`public string GetHighestRole(VRCPlayerApi player)`
+
+**パラメータ:**
+
+| パラメータ | 型 | 説明 |
+| :--- | :--- | :--- |
+| `player` | `VRCPlayerApi` | チェック対象のプレイヤーです。 |
+
+「最も上位」とは、親子連鎖の中での序列(保持しているロールの中で、その下に連なる子ロールの連鎖が最も長いもの)を意味し、リスト上の順序ではありません。プレイヤーが何もロールを保持していない場合は `""` を返します。
+
+---
+
+### `IsRolePermanent`
+
+プレイヤーがあるロールを、取り消し可能な付与としてではなく永続的に(ホワイトリスト、インスタンスオーナー、またはキーパッド経由の永続付与として)保持しているかどうかをチェックします。
+
+`public bool IsRolePermanent(VRCPlayerApi player, int roleIndex)`
+
+| パラメータ | 型 | 説明 |
+| :--- | :--- | :--- |
+| `player` | `VRCPlayerApi` | チェック対象のプレイヤーです。 |
+| `roleIndex` | `int` | チェック対象のロールです。 |
+
+---
+
+### `IsPlayerSecurity`
+
+プレイヤーが **Is Security** フラグの付いたロールを少なくとも 1 つ保持しているかどうかをチェックします。
+
+`public bool IsPlayerSecurity(VRCPlayerApi player)`
+
+| パラメータ | 型 | 説明 |
+| :--- | :--- | :--- |
+| `player` | `VRCPlayerApi` | チェック対象のプレイヤーです。 |
+
+---
+
+## 書き込みメソッド
+
+これらは同期されたロール状態を変更するメソッドであり、呼び出し元のローカルプレイヤーが Security ロールを保持している必要があります — [セキュリティ権限](./roles#security-permission) を参照してください。
+
+### `GrantRole`
+
+プレイヤーにロールを一時的な(取り消し可能な)状態で付与し、必要であれば要求先の子ロールへも連鎖させます。
+
+`public void GrantRole(VRCPlayerApi player, int roleIndex)`
+
+| パラメータ | 型 | 説明 |
+| :--- | :--- | :--- |
+| `player` | `VRCPlayerApi` | ロールを付与する対象のプレイヤーです。 |
+| `roleIndex` | `int` | 付与するロールです。 |
+
+ローカルの呼び出し元がオブジェクトのオーナーでない場合、または Security ロールを保持していない場合は、何もせず(ログのみ記録して)終了します。
+
+---
+
+### `RevokeRole`
+
+プレイヤーからロールを剥奪し、それを要求している保持中のロールすべてへ連鎖して剥奪します。
+
+`public void RevokeRole(VRCPlayerApi player, int roleIndex)`
+
+| パラメータ | 型 | 説明 |
+| :--- | :--- | :--- |
+| `player` | `VRCPlayerApi` | ロールを剥奪する対象のプレイヤーです。 |
+| `roleIndex` | `int` | 剥奪するロールです。 |
+
+連鎖を満たすために永続的なロールを剥奪する必要がある場合、操作全体が拒否され、何も変更されません — [ロール階層](./roles#role-hierarchy-parentchild) を参照してください。
+
+---
+
+## キーパッドメソッド
+
+### `KeypadPassword`
+
+入力されたパスワードをロールと照合し、**ローカル** プレイヤーに対してそのロールを切り替えます — 保持していなければ付与し、一時的に保持していればログアウトさせます。内部的には `SS_SecurityKeypad` から呼び出され、独自のキーパッド UI を構築する場合を除き、通常はこれを直接呼び出す必要はありません。
+
+`public string KeypadPassword(string password)`
+
+保持状態が実際に変化した場合は、一致したロールの名前を返します。一致しなかった場合、そのロールが永続的に保持されている場合、またはログアウトが拒否された場合は `""` を返します。
+
+### `WasLastKeypadActionLogout`
+
+直近の `KeypadPassword` の呼び出しが付与ではなくログアウトだったかどうかを報告します。戻り値だけでは両者を区別できないためです。
+
+`public bool WasLastKeypadActionLogout()`
+
+### `GetRoleColorByName`
+
+名前からロールの設定済みの色を調べます。
+
+`public Color GetRoleColorByName(string roleName)`
+
+---
+
+## 暗号化メソッド
+
+暗号化されたホワイトリストの内容を準備・確認するために使用します — [暗号化](./assignment-methods#encryption) を参照してください。
+
+`public string EncryptText(string text, string key)`
+`public string DecryptText(string text, string key)`
+
+どちらも可逆的です。`DecryptText` は、同じキーを使って `EncryptText` が生成した内容を元に戻します。入力が有効な偶数長の 16 進数文字列でない場合、`DecryptText` は例外を投げたり不正なデータを返したりせず、入力をそのまま変更せずに返します。
