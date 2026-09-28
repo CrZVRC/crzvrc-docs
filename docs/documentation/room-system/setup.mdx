@@ -4,21 +4,21 @@ sidebar_position: 0
 
 # Setup
 
-Setting up the Room System and its required dependencies in your VRChat world is quick and straightforward. Follow these steps carefully to get everything running.
+Setting up the Room System in your VRChat world is quick and straightforward. Follow these steps carefully to get everything running.
 
 ---
 
-1. **Import the Packages:** Ensure you have successfully downloaded and imported both the **Room System** package and the **Notification System** package into your project. *(Note: The Notification System is a mandatory dependency required for intercom rings and access denied alerts).*
+1. **Import the Package:** Ensure you have successfully downloaded and imported the **Room System** package into your project.
 
-2. **Place the Notification System:** Locate the **Notification System** prefab in your project files and drag a single instance of it into your active scene hierarchy.
+2. **(Optional) Import the Notification System:** If you'd like intercom rings and access-denied alerts to also show as on-screen notifications, download and import the separate **Notification System** package too, then locate its prefab and drag a single instance into your active scene hierarchy. This is entirely optional — the Room System works exactly the same without it; you'll just be missing the on-screen alerts. Feel free to skip to step 3 if you don't need this.
 
 3. **Place Your Rooms:** Locate the **Room System** prefab in your project files. Drag and drop this prefab into your scene hierarchy. You need to do this for *every* room you want to create (e.g., if your world has 5 separate rooms, drag the prefab into the scene 5 times and position them accordingly).
 
 4. **Add the Rooms Management:** Next, locate the **Rooms Management** prefab and drag a single instance of it into your scene. This prefab acts as the brain that coordinates all the individual rooms you just placed.
 
-5. **Link the Notification System & Rooms to the Manager:** Select the **Rooms Management** prefab in your scene hierarchy. In the Unity Inspector, look for its Udon script:
-   * Drag and drop your **Notification System** prefab into the Notification System reference slot.
+5. **Link the Rooms (and, Optionally, the Notification System) to the Manager:** Select the **Rooms Management** prefab in your scene hierarchy. In the Unity Inspector, look for its Udon script:
    * Drag and drop every single **Room System** prefab from your scene into the rooms array.
+   * *(Optional)* If you placed a Notification System prefab in step 2, drag it into the Notification System reference slot. Leave this slot empty if you're not using the integration — the Room System works fine without it, it just won't show the on-screen intercom/deny alerts.
    
 > 💡 **Important:** Add the rooms to the array in a logical, sequential order (for example, starting from the first room in a corridor and ending with the last). The system automatically assigns room numbers based on the exact order they are placed in this list.
 

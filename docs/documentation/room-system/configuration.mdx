@@ -9,7 +9,7 @@ The Room System's configuration is spread across a few different places, dependi
 *   **Capacities and limits** are constants inside the `RS_Config` script and must be edited directly in that file.
 *   **Room teleport positions** are Transforms on the **RoomSystem** GameObject.
 *   **Sound effects** live on their own GameObjects (`_intercom`, `_selfieCamera`).
-*   **Notification alerts** are configured with the `RS_NotificationConfig` script on the **RoomsManagement** GameObject.
+*   **Notification alerts** are configured with the `RS_NotificationConfig` script on the **RoomsManagement** GameObject — this is an optional integration, see [Customizing Notification Alerts](#customizing-notification-alerts) below.
 
 Each of these is covered in its own section below.
 
@@ -49,6 +49,12 @@ If you want to swap out the default audio clips to better match the atmosphere o
 ---
 
 ## Customizing Notification Alerts
+
+:::info[Optional]
+The Notification System integration is entirely optional. If you don't have the **Notification System** asset in your world, or leave its reference slot empty on **Rooms Management**, these notifications are simply skipped — the Room System works exactly the same either way, with no errors. It's wired the same way the Security System links to the Notification System: a plain reference on the Rooms Management object, with no compile-time dependency between the two assets, so the Room System doesn't need the Notification System's code present in your project at all if you don't use the integration.
+:::
+
+If you do have it linked in, the Room System can show a small on-screen notification to a player for two events: someone denied their intercom ring request (naming who denied them), and an incoming intercom ring for a room they're currently in.
 
 You can fully customize the look and text of these alerts directly on the **RoomsManagement** GameObject. Look for the `RS_NotificationConfig` script in the Inspector to modify the following settings:
 
