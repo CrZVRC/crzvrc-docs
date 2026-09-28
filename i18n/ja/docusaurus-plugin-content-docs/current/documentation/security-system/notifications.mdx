@@ -1,0 +1,17 @@
+---
+sidebar_position: 5
+---
+
+# 通知
+
+:::info[オプション]
+このページはオプションの連携機能について説明しています。Notification System がインストールされていない、または未設定のままでも、Security System は問題なく、エラーもなく動作します。
+:::
+
+ワールドに別売りの **Notification System** アセットも導入されている場合、Security System はプレイヤーが自分自身でロールを取得・喪失したときに、そのロールの名前と色を使った小さな画面上アラートを表示できます。
+
+Security System のプレハブには、`SS_Notifications` スクリプトが付いた `_notifications` という GameObject があらかじめ含まれており、`SS_SecuritySystem` にもリンク済みです。そのため、この機能を有効にするには 1 ステップのリンク作業だけで済みます。
+
+1. ワールドの `NS_NotificationSystem` オブジェクトを、`_notifications`(`SS_Notifications`)の **Notification System** フィールドにドラッグします。
+2. `SS_SecuritySystem` の **Notifications Enabled** を有効にします。
+3. *(任意)* `SS_Notifications` 上で **Role Granted** および **Role Revoked** のメッセージテキスト・テキスト色・アイコンをカスタマイズします — 通知のサブテキストとアクセントカラーには、常にそのロール自身の名前と色が使われます。
