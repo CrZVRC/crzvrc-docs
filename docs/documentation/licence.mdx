@@ -4,17 +4,23 @@ sidebar_position: 2
 
 # Licence Manager
 
-To ensure a seamless, secure, and easily updatable experience, my assets use a custom License Manager system. 
+All of my assets come with the **CrZVRC License Manager**. It is included in the package you download from my stores (Jinxxy or Booth), so there is nothing extra to install.
 
-When you purchase an asset from my stores (Jinxxy or Booth), you will initially download the License Manager tool instead of the asset itself. This tool allows you to sync your account, verify your purchases, and download your assets directly inside Unity.
+You can add the assets to your project, place them in your worlds and try everything out straight away. **But until you validate your license with the License Manager, you will not be able to publish your world.**
 
-Here is a complete step-by-step guide on how to set it up.
+:::warning[Publishing requires a validated license]
+When you publish a world (**Build & Publish**, **Build & Test**, or any upload from the VRChat SDK), the License Manager checks every CrZVRC asset in your scene. If an asset is not licensed on your account, the build is **cancelled** and a message tells you which assets are missing a license. As soon as you validate the license, publishing works normally.
+
+This check only happens in the Unity Editor, when you publish. Nothing is checked inside your world, and the people who visit your world are never affected.
+:::
+
+Here is a complete step-by-step guide on how to validate your license.
 
 ---
 
 ## 1. Opening the License Manager
 
-After you download the License Manager from the store and import the `.unitypackage` into your Unity project:
+After you import the asset's `.unitypackage` into your Unity project:
 
 1. Look at the top menu bar in Unity.
 2. Click on **CrZVRC** > **License Manager**.
@@ -24,7 +30,7 @@ After you download the License Manager from the store and import the `.unitypack
 
 ## 2. Syncing Your Account (One-Time Setup)
 
-Before you can activate and download your assets, you need to sync your VRChat account with my plataform. **You only have to do this once.**
+Before you can validate a license, you need to sync your VRChat account with my platform. **You only have to do this once.**
 
 :::caution 
 You **must** be logged into the **VRChat SDK** control panel within your Unity project. The License Manager securely and automatically extracts your VRChat User ID directly from the SDK.
@@ -34,28 +40,62 @@ You **must** be logged into the **VRChat SDK** control panel within your Unity p
 
 1. **Check VRChat ID:** The License Manager will automatically fetch and display your VRChat User ID.
 2. **Enter Email:** Type your preferred email address into the provided text field.
-3. **Request Code:** Click the **Send Code** button. 
-4. **Verify:** Check your email inbox for the verification code. Enter this code into the License Manager and click **Verify code**.
+3. **Request Code:** Click the **Send Login Code** button.
+4. **Verify:** Check your email inbox for the 6-digit code. Enter it into the License Manager and click **Verify Code**.
 
 ---
 
-## 3. Registering and Downloading Assets
+## 3. Registering Your License
 
 ### Obtaining Your License Key
 
 *   **Jinxxy Purchases:** Your license key is provided automatically upon purchase on the store page or in your receipt.
 *   **Booth Purchases:** Booth does not generate license keys automatically. To get your key, please join our [Discord server](https://discord.com/invite/3W7h3Bp3mH), open a support ticket, and provide proof of your purchase. I will manually generate and send your license key.
 
-### Activating Your Asset
+### Validating Your Asset
 
-1. **Register the License:** Enter your obtained license key into the License Manager and submit it.
-2. **View Activated Products:** Once registered, your product will immediately appear in the **Activated Products** list inside the License Manager window.
-3. **Download & Import:** Click the download button next to your asset. The License Manager will download the asset directly into your project and automatically open the standard Unity dialog prompting you to import the `.unitypackage`.
-
-You are all set! The asset is now in your project and ready to be used.
+1. In the **Activate New Asset** section, choose the **Store** where you bought the asset (Jinxxy or Booth).
+2. Enter your license key and click **Register License**.
+3. Once registered, your product appears in the **Activated Assets** list. Your license is now validated and you can publish worlds that use the asset.
 
 ---
 
+## 4. What You Will See Before Your License Is Validated
+
+*   **In the Inspector:** the asset shows a red notice saying it is not licensed on your account, with an **Open License Manager** button.
+*   **When you publish:** the build is cancelled with a **Build blocked: license required** message listing the assets that are missing a license.
+
+To fix it, open the License Manager, log in, register your license key (or press **Fetch** if you already did), and publish again.
+
+---
+
+## 5. Keeping Your License Validated
+
+*   After a successful check, your license is remembered on your computer. The saved data is signed, so it cannot be edited by hand.
+*   It refreshes automatically in the background when Unity starts (if the saved data is more than 12 hours old), and whenever you log in, press **Fetch**, or register a key.
+*   You can keep publishing **for up to 7 days without an internet connection** after your last successful check. After that, open the License Manager while online and press **Fetch**.
+*   If you **Logout** of the License Manager, you will need to log in again before you can publish.
+*   A license that has been **suspended or revoked** is no longer valid, and publishing with that asset is blocked.
+*   The License Manager must stay in your project. If it is removed, publishing worlds that use my assets is blocked.
+
+---
+
+## 6. Downloading and Updating Assets
+
+Your activated assets are listed under **Activated Assets**. Click **Import** next to an asset to download its latest version directly into your project. The License Manager then opens the standard Unity dialog prompting you to import the `.unitypackage`.
+
+---
+
+## 7. Updating the License Manager
+
+The License Manager shows its version at the bottom of the window. It checks for a newer version when Unity starts and when you open the window, and you can check at any time with the **Check for updates** button.
+
+*   **Yellow banner (update available):** a newer version exists. Click **Update License Manager** whenever you want. You can keep publishing in the meantime.
+*   **Red banner (update required):** this version is no longer allowed, for example because of a security fix. Publishing worlds that use my assets is blocked until you update.
+
+Nothing is ever installed automatically: the update only happens when you click **Update License Manager**. It downloads the update and imports it, and Unity then reloads the scripts.
+
+---
 
 :::danger
 Please be aware that your licenses are permanently linked to the **VRChat User ID** you used during the synchronization process. 

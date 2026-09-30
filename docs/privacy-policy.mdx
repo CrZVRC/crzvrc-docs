@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Last updated: August 25, 2026**
+**Last updated: September 30, 2026**
 
 This Privacy Policy explains how CrZVRC collects and uses personal data when you purchase, activate, or use our VRChat assets, systems, and related services.
 
@@ -20,7 +20,7 @@ CrZVRC products, systems, and assets are intended only for users aged **18 or ol
 
 To provide a secure experience and prevent unauthorized distribution, our custom authentication API collects specific information when you activate your license. When you import and authenticate our assets via Unity, we securely log the following data:
 
-- **Email Address:** The email associated with your original purchase.
+- **Email Address:** The email address you enter in the License Manager when you sync your account. It does not have to be the email you used for your purchase. We send your login codes to it.
 - **VRChat User ID:** The specific VRChat account ID you provide to us during setup.
 - **License Key Hash:** A SHA-256 hash of your license key. We store this hash rather than the plain-text licence key.
 - **License Type:** The tier of your license (e.g., Personal or Commercial).
@@ -28,18 +28,33 @@ To provide a secure experience and prevent unauthorized distribution, our custom
 - **Product ID:** The internal identifier of the specific asset you are activating.
 - **Activation Status:** The current valid, revoked, or expired state of the license.
 - **Activation Timestamp:** The exact date and time the authentication request was created.
+- **Login Code:** A one-time 6-digit code that we email to you to confirm your email address. It is valid for 10 minutes and is deleted once you use it.
+- **Discord User ID:** If you verify your licence in our Discord server, your Discord user ID is linked to that licence so that you can receive the customer role.
 
 ## Data Usage
 
-This information is collected exclusively to validate your purchase, deliver the correct asset files to your Unity project, and provide accurate technical support. We use this data strictly for internal security and license management, and we do not sell your information to third parties.
+This information is collected exclusively to validate your purchase, check your licence when you publish a world from Unity, deliver the correct asset files to your Unity project, give you the customer role in our Discord server, and provide accurate technical support. We use this data strictly for internal security and license management, and we do not sell your information to third parties.
+
+## Data Stored on Your Computer
+
+The License Manager keeps some data on your own computer, in the Unity Editor preferences. These preferences are shared by your Unity projects on that computer. The data is only sent to our API when you use the License Manager (for example, your login token is sent with your requests).
+
+- **Your login:** an access token (valid for 30 days), your VRChat User ID, your email address, and your VRChat display name.
+- **Your licence data:** a signed list of the products your account is licensed for, used to check your licence when you publish. It is valid for 7 days, which is why you can keep publishing offline for up to 7 days after your last successful check.
+- **Update information:** the latest License Manager version number and when it was last checked.
+
+When you log out of the License Manager, your login and licence data are removed from your computer.
 
 ## Services That Process Your Data
 
 The following services process data as part of providing and managing your licence:
 
 - **Jinxxy:** purchase and licence information used for licence activation.
-- **CrZVRC database:** our database stores the licence and activation data described in this Policy.
-- **CrZVRC licence-management API:** our API validates and manages licence activations and status.
+- **CrZVRC database:** our database stores the licence and activation data described in this Policy. It is hosted with **Neon** (PostgreSQL).
+- **CrZVRC licence-management API:** our API validates and manages licence activations and status. It is hosted on **Vercel**, which may process technical request data such as IP addresses.
+- **Resend:** sends the login-code emails, so it processes your email address and the content of the message.
+- **Cloudflare (R2):** stores the asset files and delivers them to you through time-limited download links, so it processes technical request data such as your IP address.
+- **Discord:** if you verify your licence in our Discord server, Discord processes your Discord user ID and your role. Discord's own privacy policy applies to its use.
 
 ## Data Retention and Removal
 
