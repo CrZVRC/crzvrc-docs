@@ -29,7 +29,7 @@ This rebuild only happens while the Inspector for the GameObject holding `SS_Sec
 
 ## Theme Colors
 
-`SS_ConfigUI` holds five colors used across the panel, the player cards, and the role columns:
+`SS_ConfigUI` holds **only** five colors — it's a pure value holder, with no UI elements of its own:
 
 | Color | Purpose |
 | :--- | :--- |
@@ -39,14 +39,46 @@ This rebuild only happens while the Inspector for the GameObject holding `SS_Sec
 | **Border Color** | Panel and card borders. |
 | **Theme Color** | A per-world accent color, meant to be the one you change to match your world's own look — the other four are treated as fixed structural colors. |
 
-Each color also has a list of which UI elements it applies to, wired directly on `SS_ConfigUI` for its own elements, and separately on each `SS_PlayerCard` / `SS_RoleCard` prefab for their own per-instance elements (since a card is instantiated many times, it can't share a single element list with the others).
+Every visible element that uses these colors is wired up on whichever component actually displays it, not on `SS_ConfigUI` itself — each of `SS_SecuritySystemUI` (the panel's own background, borders, and headers), `SS_PlayerCard`, and `SS_RoleCard` has its own five lists of themed elements, since each is a separate instance and can't share one list with the others.
 
 :::tip[Live Preview]
-Changing a color on `SS_ConfigUI` updates every already-built player card and role card immediately in the Unity Editor — no need to enter Play mode to see it. This usually happens automatically as you edit, but not every way of changing a color (notably dragging in the color picker window) reliably triggers it. `SS_ConfigUI`'s Inspector has an **Apply Colors** button below the color fields for exactly this case — click it and every color is force-applied across the whole panel, including any player and role cards already built, so it's the reliable way to guarantee your colors actually show up.
+Changing a color on `SS_ConfigUI` updates every linked panel and its already-built player/role cards immediately in the Unity Editor — no need to enter Play mode to see it. This usually happens automatically as you edit, but not every way of changing a color (notably dragging in the color picker window) reliably triggers it. `SS_ConfigUI`'s Inspector has an **Apply Colors** button below the color fields for exactly this case — click it and every color is force-applied across every linked panel and its cards, so it's the reliable way to guarantee your colors actually show up.
 :::
 
 ---
 
-## Wiring a Card's Theme
+## Wiring a Panel's Theme
 
-Player cards and role cards are built once at edit time and can't hold a direct reference to `SS_ConfigUI` on the prefab itself (a prefab asset can't reference a scene object) — that link is set automatically by `SS_SecuritySystemUI`'s custom Inspector on each instantiated copy, from the **Config UI** field on `SS_SecuritySystemUI`. The included prefab ships with this already wired, so you only need to think about it if you rebuild the panel on a custom setup of your own.
+The shared `SS_ConfigUI` is set **once**, in the **Config UI** field on the main `SS_SecuritySystem` object (under its "Security Panels" header) — not on the panel itself. Adding a panel to the **Security Panels** list there (see [Multiple Panels](#multiple-panels) below) is all it takes for that panel to receive the shared theme automatically when the world loads — there's no separate theme reference to wire on the panel.
+
+That shared reference does double duty on each panel it reaches:
+
+* `SS_SecuritySystemUI` uses it directly for its own themed elements (its **Primary/Secondary/Background/Border/Theme Color Elements** lists).
+* Its custom Inspector also threads it into every player card and role card it builds, on each instantiated copy — so you never wire `SS_ConfigUI` onto a card by hand.
+
+:::info
+This is a one-time setup step for the *whole world*, not per panel — you set the **Config UI** field once, and every panel you add to the **Security Panels** list picks it up automatically, with no per-panel color reference to assign.
+:::
+
+---
+
+## Multiple Panels
+
+A world can have more than one Security System management panel — for example, one at a front desk and another backstage — and keep all of them fully in sync, both visually and live. Adding a panel to the **Security Panels** list on the main `SS_SecuritySystem` object is the **entire** setup it needs — everything else is pushed into it automatically from there.
+
+### Registering a Panel
+
+1. Build or place your panel — a GameObject with `SS_SecuritySystemUI` on it (copy the included prefab's panel, or build your own).
+2. Select the GameObject holding **`SS_SecuritySystem`** in your Hierarchy.
+3. In its Inspector, find the **Security Panels** list and increase its size by one.
+4. **Drag the panel's GameObject (the one holding `SS_SecuritySystemUI`) from your Hierarchy into that new slot.**
+
+That's it — no other field needs to be touched on the panel itself. Everything below is pushed into it automatically from there:
+
+* **Theme.** The shared `SS_ConfigUI` (see [Wiring a Panel's Theme](#wiring-a-panels-theme) above). Editing a color on it afterward updates every panel in the list, and every card on every one of them — see [Live Preview](#theme-colors) above.
+* **Roles.** The role definitions from `SS_RolesManagement`, letting the panel build and theme its own role columns and player-card toggles (see [Adding & Removing Roles](#adding--removing-roles) above).
+* **Live player list & toggles.** A working link back to `SS_SecuritySystem` itself, which is what lets the panel show the live player list and have its toggles reflect the current role state, including its own clicks.
+
+:::warning
+A panel left off the **Security Panels** list on `SS_SecuritySystem` gets **nothing** — no theme, no roles, no player list, no role toggles, not even a repaint after clicking its own toggles — since that list is the only thing `SS_SecuritySystem` ever pushes anything through. There's no separate step to forget for any of the three; adding a panel to this one list is the entire setup.
+:::
