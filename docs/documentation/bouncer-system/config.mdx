@@ -2,13 +2,17 @@
 sidebar_position: 1
 ---
 
-# Configuration 
+# Configuration
 
-The `SS_Config` class acts as the core configuration file for the Bouncer System. It stores the global constants that define player capacities and the different security tier levels used throughout the system's logic.
+The `BS_Config` class holds the global constants for the Bouncer System: the number of players it can track and the security levels used throughout its logic.
 
-If you need to increase the maximum number of players the system can track or reference the security levels in your own custom Udon scripts, you will find those values defined here.
+If you need to increase the maximum number of players the system can track, or reference the security levels in your own Udon scripts, you will find those values defined here.
 
-*   **`PLAYER_CAPACITY`**: Defines the maximum number of players the Bouncer System can track and synchronize. The default is `5`. **Note:** If your VRChat world allows for more than 5 players, you must increase this integer to match your world's maximum instance capacity to prevent errors.
+*   **`PLAYER_CAPACITY`**: The maximum number of players the Bouncer System can track and synchronize. The default is `15`. **Note:** If your VRChat world allows for more than 15 players, increase this integer to match your world's maximum instance capacity. Players beyond the capacity are not tracked.
 *   **`SECURITY_LEVEL_NONE`** (`-1`): The default state. Represents a standard player with no security privileges.
-*   **`SECURITY_LEVEL_TEMPORARY`** (`0`): Represents a player who has been granted temporary security access during the active instance (for example, a normal player promoted by another security member).
-*   **`SECURITY_LEVEL_PERMANENT`** (`1`): Represents a player with high-level, permanent security access (such as the Instance Owner, or a user whose name is hardcoded in the Inspector or fetched from your online URL).
+*   **`SECURITY_LEVEL_TEMPORARY`** (`0`): A player who has been granted temporary security access during the active instance (for example, a normal player promoted by another security member).
+*   **`SECURITY_LEVEL_PERMANENT`** (`1`): A player with permanent security access — the Instance Owner (when enabled), or a user listed as **Security** on the whitelist (typed in the Inspector or fetched from your online URL).
+
+:::tip[After changing PLAYER_CAPACITY]
+Each panel's list of player cards is built in the Editor to match `PLAYER_CAPACITY`. After changing it, click the GameObject holding `BS_BouncerUI` in your Hierarchy once so its Inspector redraws and the cards are rebuilt to match.
+:::

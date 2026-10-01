@@ -76,8 +76,8 @@ A world can have more than one Security System management panel — for example,
 That's it — no other field needs to be touched on the panel itself. Everything below is pushed into it automatically from there:
 
 * **Theme.** The shared `SS_ConfigUI` (see [Wiring a Panel's Theme](#wiring-a-panels-theme) above). Editing a color on it afterward updates every panel in the list, and every card on every one of them — see [Live Preview](#theme-colors) above.
-* **Roles.** The role definitions from `SS_RolesManagement`, letting the panel build and theme its own role columns and player-card toggles (see [Adding & Removing Roles](#adding--removing-roles) above).
-* **Live player list & toggles.** A working link back to `SS_SecuritySystem` itself, which is what lets the panel show the live player list and have its toggles reflect the current role state, including its own clicks.
+* **Roles.** The role columns and player-card toggles are built and themed automatically to match `SS_RolesManagement` (see [Adding & Removing Roles](#adding--removing-roles) above) — this happens while the panel sits in the **Security Panels** list, not by anything wired on the panel itself.
+* **Live player list & toggles.** `SS_SecuritySystem` pushes the current player list to every panel in the list the moment anything changes, which is what lets a panel show it and have its toggles reflect the current role state, including its own clicks.
 
 :::warning
 A panel left off the **Security Panels** list on `SS_SecuritySystem` gets **nothing** — no theme, no roles, no player list, no role toggles, not even a repaint after clicking its own toggles — since that list is the only thing `SS_SecuritySystem` ever pushes anything through. There's no separate step to forget for any of the three; adding a panel to this one list is the entire setup.

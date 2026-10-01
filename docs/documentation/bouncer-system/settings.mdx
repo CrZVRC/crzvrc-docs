@@ -2,42 +2,68 @@
 sidebar_position: 2
 ---
 
-# Settings 
+# Settings
 
-The Bouncer System is highly customizable directly from the Unity Inspector. By adjusting the settings on the main Bouncer System prefab, you can tailor exactly how the system reacts when players are granted or denied access.
-
-Below is a complete breakdown of all the available configuration options.
+The Bouncer System is customized from the Unity Inspector. Select the main **`BS_BouncerSystem`** object to tailor how the system reacts when players are granted or denied access.
 
 ---
 
-## Core Bouncer Toggles
+## Security Settings
 
-These settings dictate the foundational behavior and default states of your security environment.
+These settings dictate the foundational behavior and default state of your gate.
 
-*   **`Fetch Security Names`**: When enabled, the system will dynamically pull the list of authorized security personnel from an online URL (such as a raw Pastebin link). This allows you to update your security staff remotely without needing to re-upload your VRChat world! If disabled, you will need to manually input the security names directly into the Unity Inspector.
-*   **`Is Security On`**: This networked (UdonSynced) setting determines the default state of the system when a new instance of your world is generated. If enabled, the Bouncer System is active immediately upon world creation. If disabled, it starts offline until a security member turns it on.
-*   **`Instance Owner Is Security`**: When enabled, the player who created the instance (the instance owner) is automatically granted the Security role, regardless of whether their name is on the security list.
+*   **`Fetch Whitelist`**: When enabled, the system also pulls whitelist entries from an online URL (such as a raw Pastebin link) when the world loads, so you can update your staff without re-uploading your world. Entries typed into the **Users** list in the Inspector are always used.
+*   **`Is Security On`**: A networked setting that decides the gate's state when a new instance is created. If enabled, the gate is active immediately; if disabled, everyone counts as verified until a security player turns it on.
+*   **`Instance Owner Is Security`**: When enabled, the player who created the instance automatically gets **Permanent** security, whether or not their name is on the list.
+*   **`Security Animation`**, **`Enable Notifications`**: see the sections below. The teleport destinations are described under [Teleportation & Movement](#teleportation--movement).
 
 ---
 
-## Feedback & Interface
+## Whitelist
 
-Configure how the system communicates access changes to the players in the world.
+The whitelist works like the [Security System's](/docs/documentation/security-system/assignment-methods): each entry is a **type** next to a player's display name.
 
-*   **`Security Animation`**: If enabled, the system will play a specific animation whenever a user gains or loses access. This is highly recommended if you are using the system as a physical "Security Gate" or bouncer system, as it provides clear visual feedback to the players.
-*   **`Enable Notifications`**: When enabled, the Bouncer System will automatically trigger on-screen alerts during access changes.
+*   **`Users`**: A reorderable list. Pick **Security** or **Access** for each row, then type the player's name.
+    *   **Security** — the player gets **Permanent** security (and is verified) as soon as they join.
+    *   **Access** — the player is verified as soon as they join, even while the gate is on, but gets no security privileges.
+*   **`URL`**: Where extra entries are fetched from when **Fetch Whitelist** is on — plain text, **one `playerName, Security` or `playerName, Access` line per player**. Lines with any other type are ignored.
 
-:::info 
-The **Enable Notifications** feature will only function if you also have the **CrZVRC Notification System** asset installed.
+---
+
+## Gate Feedback
+
+*   **`Security Animation`**: When enabled, an Animator plays an **open** animation when the local player becomes verified and a **close** animation when they stop being verified. Needs **`Animator`**, **`Open Gate Animation`** and **`Close Gate Animation`** assigned.
+
+:::info
+If the Animator or either animation is left empty, **Security Animation** is switched off automatically when the world starts — it won't cause errors, it just won't play.
 :::
 
 ---
 
 ## Teleportation & Movement
 
-You can configure the system to physically move players around your world based on their current access level.
+There are no teleport toggles: assign a destination to use it, or leave it empty to skip it. All three Transforms sit together under the **Positions** header in the Inspector.
 
-*   **`Teleport When Verified`**: If enabled, a player will be immediately teleported to a specific location the moment they are granted access.
-*   **`Verified Position`**: The exact Transform (coordinates and rotation) where the player will be sent if `Teleport When Verified` is enabled.
-*   **`Teleport When Unverified`**: If enabled, a player will be immediately teleported away if their access is revoked by a security member.
-*   **`Reset Position`**: The Transform (coordinates and rotation) representing the fallback or "kicked" location. This is where players are sent when their access is revoked or reset.
+*   **`Access Granted Position`**: The local player is teleported here the moment they become verified.
+*   **`Access Denied Position`**: The local player is teleported here the moment their access is revoked.
+*   **`Security Position`**: The local player is teleported here the moment they join as security or are granted security. A player who later **loses** security is **respawned** at the world's spawn point.
+
+Security players are never teleported by the Access Granted or Access Denied positions.
+
+---
+
+## Object & Collider Toggling
+
+On the **`BS_GameObjectsManagement`** object, two independent lists are shown/hidden based on the local player's state:
+
+*   **`Verified Game Objects`**: Active while the gate is off, or the local player is verified or security. Use these for the area you're protecting (a door collider, a VIP room).
+*   **`Security Game Objects`**: Active only for security players. Use these for staff-only items.
+
+Both lists start hidden until the first update.
+
+---
+
+## Notifications & Player Tags
+
+*   **`Enable Notifications`**: Shows the local player an on-screen alert when their own state changes. Needs the **CrZVRC Notification System** — see [Notifications](./notifications). If the notifications object isn't assigned, this is switched off automatically.
+*   **`Player Tags`**: Optionally shows a floating tag above a player's head. Needs the **CrZVRC Player Tags** asset — see [Player Tags](./player-tags).

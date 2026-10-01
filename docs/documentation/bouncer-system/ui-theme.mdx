@@ -1,0 +1,68 @@
+---
+sidebar_position: 3
+---
+
+# Player Panel & Theme
+
+The panel is the interface security staff use to see and manage every player. It's built in the Editor by `BS_BouncerUI`'s custom Inspector, and its colors are driven by a shared `BS_ConfigUI` script.
+
+---
+
+## The Panel
+
+* A live list of every tracked player, each shown as a card with their **name**, platform (**VR** or **DESKTOP**), a **verified** indicator and a **security** indicator. Both indicators can be toggled by another security player.
+* **Two sort modes**: alphabetical, or newest-joined first. This is a **personal preference** — it only changes what *you* see, not anyone else's panel — and the current mode is shown as a label ("Alphabetical" / "Join Time"). Only security players can change it.
+* A security toggle element that shows while the gate is on.
+* Updates automatically as players join, leave or have their state changed by anyone.
+* You can't change your own security level, a **Permanent** security player can't be demoted from the panel, and a **Temporary** security player can't remove another temporary player's privileges.
+
+---
+
+## Theme Colors
+
+`BS_ConfigUI` holds **only** five colors — it's a pure value holder with no UI elements of its own:
+
+| Color | Purpose |
+| :--- | :--- |
+| **Primary Color** | Main accent color. |
+| **Secondary Color** | Secondary accent color. |
+| **Background Color** | Base panel background. |
+| **Border Color** | Panel and card borders. |
+| **Theme Color** | A per-world accent color, meant to be the one you change to match your world's own look — the other four are fixed structural colors. |
+
+Every visible element that uses these colors is wired up on the component that actually displays it. Each of these has its own five lists — **Primary / Secondary / Background / Border / Theme Color Elements**:
+
+* **`BS_BouncerUI`** — the panel's own background, borders and headers.
+* **`BS_PlayerUI`** — each player card. These lists are set on the **player card prefab** (`playerCard`), so every card built from it gets them.
+
+Drag each `Image` or `TextMeshPro` text into the list for the color it should use.
+
+:::warning[Check the alpha]
+Make sure each color's **alpha** is 255. A color with alpha 0 makes every element wired to it fully transparent.
+:::
+
+:::tip[Live Preview]
+Changing a color on `BS_ConfigUI` updates every linked panel, and every player card on it, immediately in the Unity Editor — no need to enter Play mode. This usually happens automatically as you edit, but not every way of changing a color (notably dragging in the color picker window) reliably triggers it. `BS_ConfigUI`'s Inspector has an **Apply Colors** button for exactly this case — click it and every color is force-applied across every linked panel and its cards.
+:::
+
+---
+
+## Multiple Panels
+
+A world can have more than one Bouncer panel — for example, one at the front desk and one backstage — all fully in sync, visually and live.
+
+### Registering a Panel
+
+1. Build or place your panel — a GameObject with `BS_BouncerUI` on it (copy the included one, or build your own).
+2. Select the GameObject holding **`BS_BouncerSystem`**.
+3. In its Inspector, find the **Bouncer Panels** list and increase its size by one.
+4. **Drag the panel's GameObject (the one holding `BS_BouncerUI`) into the new slot.**
+
+That's all the setup a panel needs. Everything else is pushed in automatically:
+
+* **Theme.** The shared `BS_ConfigUI` is set **once**, in the **Config UI** field on `BS_BouncerSystem` — not on each panel. Editing a color updates every panel in the list.
+* **Live player list & toggles.** The current list is pushed to every panel the moment anything changes, whichever panel (or join, leave or name list) caused it.
+
+:::warning
+A panel left off the **Bouncer Panels** list gets **nothing** — no theme, no player list, and no live updates, not even after clicking its own toggles.
+:::

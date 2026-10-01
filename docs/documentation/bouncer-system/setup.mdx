@@ -1,0 +1,40 @@
+---
+sidebar_position: 0
+---
+
+# Setup
+
+:::info[Licensed with the CrZVRC License Manager]
+This asset comes with the [License Manager](/docs/documentation/licence). You can add it to your world and try it right away, but you must validate your product license with the License Manager before you can publish your world.
+:::
+
+The Bouncer System is a simple door gate: every player is either **verified** or not, and some players can also be given **security** privileges so they can verify or unverify others. There are no named roles and no keypad — just one on/off gate and one on/off privilege. If you need roles, a hierarchy or a password keypad, see the [Security System](/docs/documentation/security-system/setup) instead.
+
+---
+
+## Adding It to Your World
+
+1. **Locate the prefab:** In your Project window, find the **`BouncerSystem`** prefab under `BouncerSystem`.
+2. **Drag it into your scene:** Drop it into your scene hierarchy and position the player-list panel where you'd like staff to use it.
+
+Everything the system needs is wired together on the main **`BS_BouncerSystem`** object:
+
+| Field | What it is |
+| :--- | :--- |
+| **Players** | `BS_PlayersManagement` — the synced list of every tracked player. |
+| **Game Objects** | `BS_GameObjectsManagement` — the objects shown/hidden by state (see [Settings](./settings#object--collider-toggling)). |
+| **Notifications** | `BS_NotificationsManagement` — optional, see [Notifications](./notifications). |
+| **Config UI** | The shared theme (`BS_ConfigUI`), set **once** for every panel. See [Panel & Theme](./ui-theme). |
+| **Bouncer Panels** | Every player-list panel (`BS_BouncerUI`) in the world. See [Multiple Panels](./ui-theme#multiple-panels). |
+| **Interactions UI** | `BS_InteractionsUI` — the actions that aren't tied to one panel (security toggle, sort toggle, per-player buttons). |
+| **Player Tags** | `BS_PlayerTags` — optional, see [Player Tags](./player-tags). |
+
+:::info
+Only the **Bouncer Panels** list needs attention when you add another panel. Everything else is pushed into each panel automatically when the world loads.
+:::
+
+---
+
+## Who Starts As Security?
+
+Nobody is security by default. Permanent security comes from the **Instance Owner** shortcut and/or **Security** entries on the **Whitelist** (typed in the Inspector or fetched from a URL) — see [Settings](./settings#whitelist). Once someone has security, they can grant it temporarily to others, and verify or unverify players, from the panel.

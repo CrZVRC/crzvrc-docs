@@ -1,0 +1,27 @@
+---
+sidebar_position: 4
+---
+
+# Notifications
+
+:::info[Optional]
+This page describes an optional integration. The Bouncer System works fine, with no errors, if the Notification System isn't installed or left unconfigured.
+:::
+
+If the **[Notification System](/docs/documentation/notification-system/config)** asset is also in your world, the Bouncer System can show the **local player** a small on-screen alert when something happens to them personally. Nobody is notified about another player's changes.
+
+Four events are covered: **becoming verified**, **losing verification**, **receiving security** and **losing security**.
+
+---
+
+## Setting It Up
+
+1. Select the object holding `BS_NotificationsManagement` and drag your world's `NS_NotificationSystem` into its **Notification System** field.
+2. Enable **Enable Notifications** on `BS_BouncerSystem`.
+3. *(Optional)* For each of the four events — **Verify User**, **Unverify User**, **Security** and **Un Security** — customize the **text**, **text color**, **sub-text color**, **icon** and **icon color**.
+
+:::warning
+Set the **alpha** of each color to 255. A color with alpha 0 can render the text or icon invisible.
+:::
+
+If **Notifications** is left unassigned, **Enable Notifications** is switched off automatically when the world starts.

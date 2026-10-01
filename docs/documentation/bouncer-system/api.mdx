@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 6
 ---
 
 # API Reference
@@ -14,7 +14,7 @@ Below are the primary methods available to developers.
 
 ### `SetPlayerSecurityLevel`
 
-Updates a player's security level 
+Updates a player's security level. The caller must have security and can't change their own level. Granting any level also verifies the player.
 
 `public void SetPlayerSecurityLevel(int playerId, sbyte level)`
 
@@ -29,7 +29,7 @@ Updates a player's security level
 
 ### `SetPlayerVerified`
 
-Updates a non-security player's verification state 
+Updates a non-security player's verification state. The caller must have security.
 
 `public void SetPlayerVerified(int playerId, bool state)`
 
@@ -44,7 +44,7 @@ Updates a non-security player's verification state
 
 ### `SetSecurity`
 
-Enables or disables security mode and updates verification for players without security privileges.
+Enables or disables the world-wide gate (caller must have security). Turning it **off** verifies everyone.
 
 `public void SetSecurity(bool state)`
 
@@ -58,7 +58,7 @@ Enables or disables security mode and updates verification for players without s
 
 ### `SetPlayersListSortMode`
 
-Sets the player-list sort mode and reorders synchronized player data
+Sets the **local** player's preferred sort order and repaints every registered panel. Only security players can use it. It is never synced — it doesn't change what anyone else sees.
 
 `public void SetPlayersListSortMode(bool state)`
 

@@ -1,0 +1,29 @@
+---
+sidebar_position: 5
+---
+
+# Player Tags
+
+:::info[Optional]
+This page describes an optional integration. If the **Player Tags** field is left empty, or you haven't installed the Player Tags asset at all, each tag dropdown simply shows **"No Player Tags"** and nothing else needs configuring — the Bouncer System works exactly the same, with no errors.
+:::
+
+If the separate **[Player Tags](/docs/documentation/player-tags/config)** asset is also in your world, the Bouncer System can show a floating tag above a player's head automatically — see that asset's docs for what a tag is and how to build one.
+
+---
+
+## Setting It Up
+
+1. Select the object holding `BS_PlayerTags` and drag your world's `PL_PlayerTags` into its **Player Tags** field.
+2. Pick a tag from each dropdown. Both list every tag defined on your Player Tags setup:
+   * **Security Tag** — shown while a player holds security privileges.
+   * **Access Tag** — shown while a player is verified but **not** security.
+3. Make sure that `BS_PlayerTags` object is assigned in **Player Tags** on `BS_BouncerSystem`.
+
+Leave a dropdown on **"No Player Tags"** to show no tag for that state.
+
+---
+
+## One Tag At A Time
+
+A player only ever shows one tag. Security is the senior state, so a player who is both verified **and** security only shows the **Security Tag** — their Access Tag is replaced, not stacked. Tags update the moment a player's state changes.
